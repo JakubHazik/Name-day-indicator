@@ -14,12 +14,11 @@ class Indicator(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="MessageDialog")
 
-        self.names = Names("/home/jakub/Dropbox/Projects/Meniny_v_liste/Name-day-indicator/src/sk-meniny.csv")
+        self.names = Names("sk-meniny.csv")
 
         self.app = 'Name\'s day'
-        iconpath = "/home/jakub/Dropbox/Projects/Meniny_v_liste/Name-day-indicator/src/calendar.png"
         self.indicator = AppIndicator3.Indicator.new(
-            self.app, iconpath,
+            self.app, "/home/jakub/Dropbox/Projects/Meniny_v_liste/Name-day-indicator/src/calendar.png",
             AppIndicator3.IndicatorCategory.OTHER)
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
         self.indicator.set_menu(self.create_menu())
@@ -96,8 +95,7 @@ class Indicator(Gtk.Window):
         about.set_copyright(u"\u00A9"+" HAZman")
         about.set_comments("You mustn\'t forget to friends and their name day!\n This widget help you with it.\n")
         about.set_website("https://github.com/JakubHazik/Name-day-indicator")
-        about.set_logo(GdkPixbuf.Pixbuf.new_from_file_at_size(
-            "/home/jakub/Dropbox/Projects/Meniny_v_liste/Name-day-indicator/src/calendar.png", 64, 64))
+        about.set_logo(GdkPixbuf.Pixbuf.new_from_file_at_size("calendar.png", 64, 64))
         about.run()
         about.destroy()
 
@@ -167,7 +165,11 @@ class Names():
             return "Name didn\'t find."
         delta= datetime.timedelta(days)
         date = year+delta
-        return date.strftime("%d. %B %Y \n%A")
+
+        if date<datetime.date.today():
+            date=date+datetime.timedelta(days=365)
+
+        return date.strftime("The earliest date: \n%d. %B %Y \n%A")
 
     def gap_year(self, year):
         return (((year % 4 == 0) & (year % 100 != 0)) | (year % 400 == 0))
