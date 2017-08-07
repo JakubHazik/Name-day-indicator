@@ -12,10 +12,10 @@ from threading import Thread
 
 class Indicator:
     def __init__(self):
-        self.names = Names("/home/jakub/Dropbox/Projects/Meniny v liste/Name-day-indicator/sk-meniny.csv")
+        self.names = Names("/home/jakub/Dropbox/Projects/Meniny v liste/Name-day-indicator/src/sk-meniny.csv")
 
         self.app = 'Name\'s day'
-        iconpath = "/home/jakub/Dropbox/Projects/Meniny v liste/Name-day-indicator/icon.ico"
+        iconpath = "/home/jakub/Dropbox/Projects/Meniny v liste/Name-day-indicator/src/icon.ico"
         self.indicator = AppIndicator3.Indicator.new(
             self.app, iconpath,
             AppIndicator3.IndicatorCategory.OTHER)
