@@ -14,7 +14,7 @@ class Indicator(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="MessageDialog")
 
-        self.names = Names("sk-meniny.csv")
+        self.names = Names("/home/jakub/Dropbox/Projects/Meniny_v_liste/Name-day-indicator/src/sk-meniny.csv")
 
         self.app = 'Name\'s day'
         self.indicator = AppIndicator3.Indicator.new(
@@ -23,6 +23,7 @@ class Indicator(Gtk.Window):
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
         self.indicator.set_menu(self.create_menu())
         self.indicator.set_label(self.names.name_day(), self.app)
+
         # the thread:
         self.update = Thread(target=self.refresh)
         # daemonize the thread to make the indicator stopable
@@ -30,8 +31,8 @@ class Indicator(Gtk.Window):
         self.update.start()
 
     def refresh(self):
+        i=0
         while True:
-            time.sleep(60 * 10)  # 10 minutes
             # apply the interface update using  GObject.idle_add()
             GObject.idle_add(
                 self.indicator.set_label,
@@ -39,12 +40,19 @@ class Indicator(Gtk.Window):
                 self.app,
                 priority=GObject.PRIORITY_DEFAULT
             )
-            self.indicator.set_menu(self.create_menu())
+
+            GObject.idle_add(
+                self.indicator.set_menu,
+                self.create_menu(),
+                priority=GObject.PRIORITY_DEFAULT
+            )
+
+            time.sleep(60)  # 10 minutes
 
     def create_menu(self):
         menu = Gtk.Menu()
         #today name
-        item_1_name=datetime.date.today().day.__str__() + '. ' + self.names.name_day()
+        item_1_name=datetime.date.today().day.__str__() + '. ' + self.names.name_day(datetime.date.today())
         item_1 = Gtk.MenuItem(item_1_name)
         menu.append(item_1)
         #tomorrow day name
@@ -95,7 +103,7 @@ class Indicator(Gtk.Window):
         about.set_copyright(u"\u00A9"+" HAZman")
         about.set_comments("You mustn\'t forget to friends and their name day!\n This widget help you with it.\n")
         about.set_website("https://github.com/JakubHazik/Name-day-indicator")
-        about.set_logo(GdkPixbuf.Pixbuf.new_from_file_at_size("calendar.png", 64, 64))
+        about.set_logo(GdkPixbuf.Pixbuf.new_from_file_at_size("/home/jakub/Dropbox/Projects/Meniny_v_liste/Name-day-indicator/src/calendar.png", 64, 64))
         about.run()
         about.destroy()
 
@@ -158,6 +166,11 @@ class Names():
         return str(Names.listNames[days]).decode('string-escape')
 
     def search_name(self,name):
+        if name=="":
+            return "Sorry, but you are noob"
+        name=name.lower()
+        name=name[0].upper()+name[1:]
+
         year= datetime.date(datetime.date.today().year,1,1)
         try:
             days = self.listNames.index(name) - 1
