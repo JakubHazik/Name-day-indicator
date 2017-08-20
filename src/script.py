@@ -22,7 +22,7 @@ class Indicator(Gtk.Window):
             AppIndicator3.IndicatorCategory.OTHER)
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
         self.indicator.set_menu(self.create_menu())
-        self.indicator.set_label(self.names.name_day(), self.app)
+        self.indicator.set_label(self.names.name_day(datetime.date.today()), self.app)
 
         # the thread:
         self.update = Thread(target=self.refresh)
@@ -31,12 +31,12 @@ class Indicator(Gtk.Window):
         self.update.start()
 
     def refresh(self):
-        i=0
         while True:
-            # apply the interface update using  GObject.idle_add()
+            retazec = self.names.name_day(datetime.date.today())
+
             GObject.idle_add(
                 self.indicator.set_label,
-                self.names.name_day(),
+                retazec,
                 self.app,
                 priority=GObject.PRIORITY_DEFAULT
             )
@@ -47,7 +47,7 @@ class Indicator(Gtk.Window):
                 priority=GObject.PRIORITY_DEFAULT
             )
 
-            time.sleep(60)  # 10 minutes
+            time.sleep(60)  # 1 minute
 
     def create_menu(self):
         menu = Gtk.Menu()
@@ -156,7 +156,7 @@ class Names():
             self.listNames.append(line)
         f.close()
 
-    def name_day(self, date=datetime.date.today()):
+    def name_day(self, date):
         thisYear = datetime.date(date.year, 1, 1)
         delta = date - thisYear
         if self.gap_year(date.year) | delta.days <= 59:
