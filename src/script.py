@@ -163,7 +163,7 @@ class Names():
             days = delta.days
         else:
             days = delta.days + 1
-        return str(Names.listNames[days]).decode('string-escape')
+        return str(Names.listNames[days])
 
     def search_name(self,name):
         if name=="":
