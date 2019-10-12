@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Exec=/usr/local/name-day-indicator/startup.sh
+Name=Name day indicator
+Comment=Launch name day indicator in top bar.
+Encoding=UTF-8
+Terminal=false
+Icon=/usr/local/name-day-indicator/src/calendar.png
+Type=Application
+Categories=Application;

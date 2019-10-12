@@ -10,15 +10,17 @@ from gi.repository import Gtk, AppIndicator3, GObject
 from threading import Thread
 from gi.repository import GdkPixbuf
 
+installationPath = "/usr/local/name-day-indicator"
+
 class Indicator(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="MessageDialog")
 
-        self.names = Names("/home/jakub/Dropbox/Projects/Meniny_v_liste/Name-day-indicator/src/sk-meniny.csv")
+        self.names = Names(installationPath + "/src/sk-meniny.csv")
 
         self.app = 'Name\'s day'
         self.indicator = AppIndicator3.Indicator.new(
-            self.app, "/home/jakub/Dropbox/Projects/Meniny_v_liste/Name-day-indicator/src/calendar.png",
+            self.app, installationPath + "/src/calendar.png",
             AppIndicator3.IndicatorCategory.OTHER)
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
         self.indicator.set_menu(self.create_menu())
@@ -103,7 +105,7 @@ class Indicator(Gtk.Window):
         about.set_copyright(u"\u00A9"+" HAZman")
         about.set_comments("You mustn\'t forget to friends and their name day!\n This widget help you with it.\n")
         about.set_website("https://github.com/JakubHazik/Name-day-indicator")
-        about.set_logo(GdkPixbuf.Pixbuf.new_from_file_at_size("/home/jakub/Dropbox/Projects/Meniny_v_liste/Name-day-indicator/src/calendar.png", 64, 64))
+        about.set_logo(GdkPixbuf.Pixbuf.new_from_file_at_size(installationPath + "/src/calendar.png", 64, 64))
         about.run()
         about.destroy()
 
